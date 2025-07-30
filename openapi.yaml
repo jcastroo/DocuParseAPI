@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  title: DocuParse API
+  version: 1.0.0
+  description: API to extract text, metadata, and entities from PDF documents.
+servers:
+  - url: https://your-domain.com
+paths:
+  /extract:
+    post:
+      summary: Extract data from uploaded PDF file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Extraction result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                  metadata:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      author:
+                        type: string
+                      pages:
+                        type: integer
+                      created_at:
+                        type: string
+                  entities:
+                    type: object
+                    properties:
+                      emails:
+                        type: array
+                        items:
+                          type: string
+                      phones:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            country_code:
+                              type: integer
+                            national_number:
+                              type: integer
+                      ibans:
+                        type: array
+                        items:
+                          type: string
+                      nifs:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: Invalid or missing API Key
+        '429':
+          description: Rate limit exceeded
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+security:
+  - ApiKeyAuth: []
