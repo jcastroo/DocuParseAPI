@@ -10,6 +10,10 @@ request_counts = {}
 
 class APIKeyMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        # Permite acesso livre a endpoints públicos
+        if request.url.path in ["/health", "/docs", "/version", "/example"]:
+            return await call_next(request)
+
         api_key = request.headers.get("X-RapidAPI-Key")
         
         if not api_key or api_key not in RAPIDAPI_KEYS:
